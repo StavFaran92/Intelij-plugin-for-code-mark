@@ -32,7 +32,7 @@ public class UnmarkBlockAction extends AnAction {
 
         int offset = primaryCaret.getOffset();
 
-        List<RangeHighlighter> mList = RangeHighlightHandler.getHighlightList(RangeHighlightHandler.MarkerType.GREEN);
+        List<RangeHighlighter> mList = RangeHighlightHandler.getHighlightMap(RangeHighlightHandler.MarkerType.GREEN);
 
         for(RangeHighlighter rhl: mList){
             int start = rhl.getStartOffset();

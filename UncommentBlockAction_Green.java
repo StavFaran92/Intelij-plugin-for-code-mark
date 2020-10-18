@@ -26,7 +26,7 @@ public class UncommentBlockAction_Green extends AnAction {
         final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
 
-        List<RangeHighlighter> mList = RangeHighlightHandler.getHighlightList(RangeHighlightHandler.MarkerType.GREEN);
+        List<RangeHighlighter> mList = RangeHighlightHandler.getHighlightMap(RangeHighlightHandler.MarkerType.GREEN);
 
         for(RangeHighlighter rhl: mList){
             int start = rhl.getStartOffset();

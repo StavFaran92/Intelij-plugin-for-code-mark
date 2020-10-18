@@ -5,10 +5,10 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.JBColor;
 import com.sun.istack.NotNull;
 
 import java.util.List;
+import java.util.TreeMap;
 
 public class CommentUncommentBlockAction extends AnAction {
 
@@ -25,26 +25,29 @@ public class CommentUncommentBlockAction extends AnAction {
         final Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
         final Document document = editor.getDocument();
 
-        List<RangeHighlighter> mList = RangeHighlightHandler.getHighlightList(type);
+        TreeMap<Integer, RangeHighlighter> mMap = RangeHighlightHandler.getHighlightMap(type);
 
-        if(!mList.isEmpty()) {
+        /**
+         * if the blockList is commented then iterate&uncomment and vice-versa.
+         */
+        if(!mMap.isEmpty()) {
 
-            if (!RangeHighlightHandler.getState(type)) {
+            if (!RangeHighlightHandler.isBlockComment(type)) {
 
-                for (RangeHighlighter rhl : mList) {
+                for (RangeHighlighter rhl : mMap.values()) {
 
                     commentBlock(project, document, rhl);
                 }
 
-                RangeHighlightHandler.setState(type, true);
+                RangeHighlightHandler.setBlockComment(type, true);
             } else {
 
-                for (RangeHighlighter rhl : mList) {
+                for (RangeHighlighter rhl : mMap.values()) {
 
                     uncommentBlock(project, document, rhl);
                 }
 
-                RangeHighlightHandler.setState(type, false);
+                RangeHighlightHandler.setBlockComment(type, false);
             }
         }
     }
@@ -55,7 +58,8 @@ public class CommentUncommentBlockAction extends AnAction {
         final Project project = e.getProject();
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
         //Set visibility only in case of existing project and editor and if a selection exists
-        e.getPresentation().setEnabledAndVisible( project != null
+        e.getPresentation().setEnabledAndVisible(
+                project != null
                 && editor != null);
     }
 
